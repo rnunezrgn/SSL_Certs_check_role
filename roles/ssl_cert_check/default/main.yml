@@ -1,0 +1,19 @@
+---
+ssl_host: "example.com"
+ssl_port: 443
+
+renew_threshold_days: 20
+
+ssl_renew_method: "certbot"
+
+certbot_domain: "{{ ssl_host }}"
+certbot_email: "admin@example.com"
+
+notify_enabled: true
+notify_method: "mail"
+
+mail_to: "ops@example.com"
+mail_from: "aap@example.com"
+smtp_host: "localhost"
+
+slack_webhook_url: ""

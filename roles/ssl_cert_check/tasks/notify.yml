@@ -1,0 +1,25 @@
+---
+- name: Send email notification
+  ansible.builtin.mail:
+    host: "{{ smtp_host }}"
+    to: "{{ mail_to }}"
+    from: "{{ mail_from }}"
+    subject: "SSL Renewal Triggered for {{ ssl_host }}"
+    body: |
+      SSL certificate for {{ ssl_host }} had {{ cert_days_remaining }} days remaining.
+
+      Renewal attempted.
+      Result:
+      {{ renew_result.stdout | default('see job output') }}
+  when: notify_method == "mail"
+
+- name: Send Slack notification
+  ansible.builtin.uri:
+    url: "{{ slack_webhook_url }}"
+    method: POST
+    body_format: json
+    body:
+      text: >
+        SSL renewal triggered for {{ ssl_host }}.
+        Remaining days: {{ cert_days_remaining }}
+  when: notify_method == "slack"

@@ -1,0 +1,13 @@
+---
+- name: Check certificate
+  ansible.builtin.include_tasks: check.yml
+
+- name: Renew certificate if needed
+  ansible.builtin.include_tasks: renew.yml
+  when: cert_days_remaining | int <= renew_threshold_days
+
+- name: Send notification
+  ansible.builtin.include_tasks: notify.yml
+  when:
+    - notify_enabled
+    - cert_days_remaining | int <= renew_threshold_days

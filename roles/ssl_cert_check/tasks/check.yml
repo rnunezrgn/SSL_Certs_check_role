@@ -1,0 +1,29 @@
+---
+- name: Get certificate expiration date
+  ansible.builtin.shell: |
+    echo | openssl s_client -servername {{ ssl_host }} -connect {{ ssl_host }}:{{ ssl_port }} 2>/dev/null | openssl x509 -noout -enddate
+  register: cert_raw
+  changed_when: false
+
+- name: Extract expiry date
+  ansible.builtin.set_fact:
+    cert_expiry: "{{ cert_raw.stdout.split('=')[1] }}"
+
+- name: Convert expiry to epoch
+  shell: date -d "{{ cert_expiry }}" +%s
+  register: cert_expiry_epoch
+  changed_when: false
+
+- name: Get current epoch
+  ansible.builtin.shell: date +%s
+  register: now_epoch
+  changed_when: false
+
+- name: Calculate remaining days
+  ansible.builtin.set_fact:
+    cert_days_remaining: >-
+      {{ ((cert_expiry_epoch.stdout | int - now_epoch.stdout | int) / 86400) | int }}
+
+- name: Show remaining days
+  ansible.builtin.debug:
+    msg: "Certificate for {{ ssl_host }} expires in {{ cert_days_remaining }} days"

@@ -1,0 +1,8 @@
+---
+- name: Renew certificate using certbot
+  ansible.builtin.command: >
+    certbot certonly --non-interactive --agree-tos
+    --standalone
+    -d {{ certbot_domain }}
+    -m {{ certbot_email }}
+  register: renew_result
