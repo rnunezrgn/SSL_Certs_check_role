@@ -18,17 +18,16 @@ This role checks an external SSL certificate, calculates remaining validity, ren
 
 ## Example Playbook
 
+```yaml
 ---
-- hosts: localhost
+- name: Example SSL Cert check Ansible Playbook
+  hosts: localhost
   gather_facts: no
   roles:
     - role: ssl_cert_check
       vars:
         ssl_host: myapp.example.com
-      
         renew_threshold_days: 15
-      
         notify_method: slack
-      
         slack_webhook_url: https://hooks.slack.com/services/XXX
-      
+```
