@@ -25,6 +25,10 @@ This role checks an external SSL certificate, calculates remaining validity, ren
     - role: ssl_cert_check
       vars:
         ssl_host: myapp.example.com
+      
         renew_threshold_days: 15
+      
         notify_method: slack
+      
         slack_webhook_url: https://hooks.slack.com/services/XXX
+      
